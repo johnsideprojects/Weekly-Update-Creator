@@ -201,6 +201,27 @@
             display: flex;
             gap: 6px;
             flex: 1;
+            align-items: center;
+        }
+
+        .input-group-suffix {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-group-suffix input {
+            padding-right: 24px;
+        }
+
+        .input-group-suffix .suffix {
+            position: absolute;
+            right: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #777;
+            pointer-events: none;
         }
 
         input[type="text"], input[type="number"], select, textarea {
@@ -453,27 +474,45 @@
                     <div class="form-grid">
                         <div class="form-row">
                             <label for="occStandard">Standard Occupancy %:</label>
-                            <input type="text" id="occStandard" value="92.4%" oninput="handleInput()">
+                            <div class="input-group-suffix">
+                                <input type="text" id="occStandard" value="92.4" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
                         </div>
                         <div class="form-row">
                             <label for="occClimate">Climate Controlled %:</label>
-                            <input type="text" id="occClimate" value="95.1%" oninput="handleInput()">
+                            <div class="input-group-suffix">
+                                <input type="text" id="occClimate" value="95.1" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
                         </div>
                         <div class="form-row">
                             <label for="occBoat">Covered Boat/RV %:</label>
-                            <input type="text" id="occBoat" value="88.0%" oninput="handleInput()">
+                            <div class="input-group-suffix">
+                                <input type="text" id="occBoat" value="88.0" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
                         </div>
                         <div class="form-row">
                             <label for="occPortable">Portable %:</label>
-                            <input type="text" id="occPortable" value="100.0%" oninput="handleInput()">
+                            <div class="input-group-suffix">
+                                <input type="text" id="occPortable" value="100.0" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
                         </div>
                         <div class="form-row">
                             <label for="occTotal">Total Occupancy %:</label>
-                            <input type="text" id="occTotal" value="93.8%" oninput="handleInput()">
+                            <div class="input-group-suffix">
+                                <input type="text" id="occTotal" value="93.8" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
                         </div>
                         <div class="form-row">
                             <label for="occLastYear">Last Year’s Occupancy %:</label>
-                            <input type="text" id="occLastYear" value="91.2%" oninput="handleInput()">
+                            <div class="input-group-suffix">
+                                <input type="text" id="occLastYear" value="91.2" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -484,7 +523,10 @@
                     <div class="form-grid">
                         <div class="form-row">
                             <label for="delinqRate">Delinquency Rate %:</label>
-                            <input type="text" id="delinqRate" value="2.4%" oninput="handleInput()">
+                            <div class="input-group-suffix">
+                                <input type="text" id="delinqRate" value="2.4" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
                         </div>
                         <div class="form-row">
                             <label for="pastDueCust">Past Due Customers:</label>
@@ -944,6 +986,17 @@
             handleInput();
         }
 
+        // HELPER TO FORMAT PERCENTAGES
+        function formatPercent(id) {
+            const el = document.getElementById(id);
+            if (!el || !el.value.trim()) return '';
+            let val = el.value.trim();
+            if (val.endsWith('%')) {
+                val = val.slice(0, -1).trim();
+            }
+            return val + '%';
+        }
+
         // RENDER PREVIEW (EMAIL OUTPUT)
         function renderPreview() {
             const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
@@ -982,15 +1035,15 @@
                 <div class="preview-row"><span class="preview-label"><b>Transfers:</b></span><span class="preview-val">${getVal('transfers')}</span></div>
 
                 <h2><b>OCCUPANCY:</b></h2>
-                <div class="preview-row"><span class="preview-label"><b>Standard:</b></span><span class="preview-val">${getVal('occStandard')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Climate Controlled:</b></span><span class="preview-val">${getVal('occClimate')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Covered Boat/RV:</b></span><span class="preview-val">${getVal('occBoat')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Portable:</b></span><span class="preview-val">${getVal('occPortable')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Total Occupancy:</b></span><span class="preview-val">${getVal('occTotal')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Last Year’s Occupancy:</b></span><span class="preview-val">${getVal('occLastYear')}</span></div>
+                <div class="preview-row"><span class="preview-label"><b>Standard:</b></span><span class="preview-val">${formatPercent('occStandard')}</span></div>
+                <div class="preview-row"><span class="preview-label"><b>Climate Controlled:</b></span><span class="preview-val">${formatPercent('occClimate')}</span></div>
+                <div class="preview-row"><span class="preview-label"><b>Covered Boat/RV:</b></span><span class="preview-val">${formatPercent('occBoat')}</span></div>
+                <div class="preview-row"><span class="preview-label"><b>Portable:</b></span><span class="preview-val">${formatPercent('occPortable')}</span></div>
+                <div class="preview-row"><span class="preview-label"><b>Total Occupancy:</b></span><span class="preview-val">${formatPercent('occTotal')}</span></div>
+                <div class="preview-row"><span class="preview-label"><b>Last Year’s Occupancy:</b></span><span class="preview-val">${formatPercent('occLastYear')}</span></div>
 
                 <h2><b>DELINQUENCY:</b></h2>
-                <div class="preview-row"><span class="preview-label"><b>Rate:</b></span><span class="preview-val">${getVal('delinqRate')}</span></div>
+                <div class="preview-row"><span class="preview-label"><b>Rate:</b></span><span class="preview-val">${formatPercent('delinqRate')}</span></div>
                 <div class="preview-row"><span class="preview-label"><b>Past Due Customers:</b></span><span class="preview-val">${getVal('pastDueCust')}</span></div>
                 <div class="preview-row"><span class="preview-label"><b>Past Due $'s:</b></span><span class="preview-val">$${getVal('pastDueDollars')}</span></div>
                 <div class="preview-row"><span class="preview-label"><b>Total # of Rented:</b></span><span class="preview-val">${getVal('totalRented')}</span></div>
