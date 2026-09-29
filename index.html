@@ -16,7 +16,11 @@
             --text-muted: #666666;
             --border-color: #dddddd;
             --white: #ffffff;
-            --header-height: 55px;
+            --header-height: 62px;
+
+            /* Fixed 18pt/18px Font Sizes */
+            --editor-font-size: 18px;
+            --preview-font-size: 18px;
         }
 
         * { box-sizing: border-box; }
@@ -39,18 +43,21 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 16px;
             flex-shrink: 0;
             border-bottom: 3px solid var(--brand-yellow);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .header-title {
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--brand-gray);
+            white-space: nowrap;
         }
 
         .header-actions {
@@ -60,7 +67,7 @@
         }
 
         .save-indicator {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: #27ae60;
             background: #eafaf1;
@@ -68,12 +75,13 @@
             padding: 4px 10px;
             border-radius: 4px;
             transition: opacity 0.3s ease;
+            white-space: nowrap;
         }
 
         .btn {
             font-family: inherit;
             font-weight: 800;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 8px 14px;
@@ -84,6 +92,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
         }
 
         .btn-primary { background: var(--brand-blue); color: white; }
@@ -116,12 +125,20 @@
             height: 100%;
         }
 
+        .editor-panel-body {
+            font-size: var(--editor-font-size);
+        }
+
+        .preview-panel-body {
+            font-size: var(--preview-font-size);
+        }
+
         .panel-header {
             padding: 12px 16px;
             background: #fafafa;
             border-bottom: 2px solid var(--brand-yellow);
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
             color: var(--brand-gray);
             display: flex;
@@ -162,7 +179,7 @@
             background: #f4f6f8;
             padding: 8px 12px;
             font-weight: 800;
-            font-size: 0.78rem;
+            font-size: 0.95rem;
             color: var(--brand-gray);
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -186,15 +203,15 @@
         }
 
         .form-row label {
-            width: 190px;
+            width: 220px;
             flex-shrink: 0;
-            font-size: 0.75rem;
+            font-size: var(--editor-font-size);
             font-weight: 700;
             color: var(--text-dark);
         }
 
         .form-row.two-col-inline label {
-            width: 140px;
+            width: 160px;
         }
 
         .input-group {
@@ -212,13 +229,13 @@
         }
 
         .input-group-suffix input {
-            padding-right: 24px;
+            padding-right: 28px;
         }
 
         .input-group-suffix .suffix {
             position: absolute;
             right: 8px;
-            font-size: 0.78rem;
+            font-size: var(--editor-font-size);
             font-weight: 700;
             color: #777;
             pointer-events: none;
@@ -226,7 +243,7 @@
 
         input[type="text"], input[type="number"], select, textarea {
             font-family: inherit;
-            font-size: 0.78rem;
+            font-size: var(--editor-font-size);
             padding: 6px 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -239,10 +256,11 @@
         }
 
         select.num-picker {
-            width: 80px;
+            width: 90px;
             flex-shrink: 0;
             background-color: #f9f9f9;
             font-weight: 700;
+            font-size: var(--editor-font-size);
         }
 
         /* DAILY NOTES SECTION */
@@ -288,7 +306,7 @@
             padding: 4px 8px;
             font-weight: 800;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
         }
         .btn-icon-del:hover { background: #fad9d6; }
 
@@ -299,7 +317,7 @@
             font-weight: 700;
             padding: 4px 8px;
             border-radius: 4px;
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             cursor: pointer;
             margin-top: 6px;
         }
@@ -315,6 +333,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            font-size: var(--editor-font-size);
         }
 
         /* PREVIEW PANEL STYLES */
@@ -324,7 +343,7 @@
             border-radius: 6px;
             padding: 28px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 13px;
+            font-size: var(--preview-font-size);
             line-height: 1.45;
             color: #000000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -334,7 +353,7 @@
         }
 
         .preview-container h2 {
-            font-size: 14px;
+            font-size: 1.15rem;
             font-weight: bold;
             text-transform: uppercase;
             margin: 18px 0 6px 0;
@@ -355,7 +374,7 @@
         .preview-label {
             font-weight: bold;
             display: inline-block;
-            min-width: 180px;
+            min-width: 220px;
         }
 
         .preview-val {
@@ -393,7 +412,7 @@
             color: #fff;
             padding: 10px 18px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: none;
@@ -405,6 +424,7 @@
 
     <header>
         <div class="header-title">AA Self-Storage Leland Weekly Update</div>
+
         <div class="header-actions">
             <span id="saveStatus" class="save-indicator">✓ Auto-saved locally</span>
             <button class="btn btn-danger-outline" onclick="clearDraft()">🗑 Clear Draft</button>
@@ -416,9 +436,9 @@
         <div class="panel">
             <div class="panel-header">
                 <span>Update Input Fields</span>
-                <span style="font-size: 0.7rem; color: #777;">Auto-syncs live to preview & localStorage</span>
+                <span style="font-size: 0.75rem; color: #777;">Auto-syncs live to preview & localStorage</span>
             </div>
-            <div class="panel-body">
+            <div class="panel-body editor-panel-body">
 
                 <!-- 0. REPORT TITLE / FACILITY -->
                 <div class="form-section">
@@ -439,8 +459,8 @@
                             <label for="moveIns">Move Ins:</label>
                             <div class="input-group">
                                 <input type="number" id="moveIns" value="8" oninput="handleInput()">
-                                <select class="num-picker" onchange="syncPicker('moveIns', this)">
-                                    <option value="">Quick</option>
+                                <select id="picker-moveIns" class="num-picker" onchange="syncPicker('moveIns', this)">
+                                    <option value="" class="default-opt">8</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -449,8 +469,8 @@
                             <label for="moveOuts">Move Out:</label>
                             <div class="input-group">
                                 <input type="number" id="moveOuts" value="3" oninput="handleInput()">
-                                <select class="num-picker" onchange="syncPicker('moveOuts', this)">
-                                    <option value="">Quick</option>
+                                <select id="picker-moveOuts" class="num-picker" onchange="syncPicker('moveOuts', this)">
+                                    <option value="" class="default-opt">3</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -459,8 +479,8 @@
                             <label for="transfers">Transfers:</label>
                             <div class="input-group">
                                 <input type="number" id="transfers" value="1" oninput="handleInput()">
-                                <select class="num-picker" onchange="syncPicker('transfers', this)">
-                                    <option value="">Quick</option>
+                                <select id="picker-transfers" class="num-picker" onchange="syncPicker('transfers', this)">
+                                    <option value="" class="default-opt">1</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -532,8 +552,8 @@
                             <label for="pastDueCust">Past Due Customers:</label>
                             <div class="input-group">
                                 <input type="number" id="pastDueCust" value="11" oninput="handleInput()">
-                                <select class="num-picker" onchange="syncPicker('pastDueCust', this)">
-                                    <option value="">Quick</option>
+                                <select id="picker-pastDueCust" class="num-picker" onchange="syncPicker('pastDueCust', this)">
+                                    <option value="" class="default-opt">11</option>
                                     <script>for(let i=0;i<=100;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -641,8 +661,8 @@
                             <label for="unrentableUnits">Unrentable Units #:</label>
                             <div class="input-group">
                                 <input type="number" id="unrentableUnits" value="2" oninput="handleInput()">
-                                <select class="num-picker" onchange="syncPicker('unrentableUnits', this)">
-                                    <option value="">Quick</option>
+                                <select id="picker-unrentableUnits" class="num-picker" onchange="syncPicker('unrentableUnits', this)">
+                                    <option value="" class="default-opt">2</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -654,7 +674,7 @@
                 <div class="form-section">
                     <div class="section-title">
                         <span>6. Weekly Notes (Daily Tasks)</span>
-                        <button class="btn btn-outline" style="padding:2px 6px; font-size:0.65rem;" onclick="addDayBlock()">+ Add Day</button>
+                        <button class="btn btn-outline" style="padding:2px 6px; font-size:0.75rem;" onclick="addDayBlock()">+ Add Day</button>
                     </div>
                     <div style="padding:10px;" id="dailyNotesContainer">
                         <!-- Dynamic Day Blocks Render Here -->
@@ -665,7 +685,7 @@
                 <div class="form-section">
                     <div class="section-title">
                         <span>7. Unresolved / Ongoing Issues</span>
-                        <button class="btn btn-outline" style="padding:2px 6px; font-size:0.65rem;" onclick="addIssueCard()">+ Add Issue</button>
+                        <button class="btn btn-outline" style="padding:2px 6px; font-size:0.75rem;" onclick="addIssueCard()">+ Add Issue</button>
                     </div>
                     <div style="padding:10px;" id="issuesContainer">
                         <!-- Dynamic Issue Cards Render Here -->
@@ -679,7 +699,7 @@
         <div class="panel">
             <div class="panel-header">
                 <span>Email Preview Output</span>
-                <button class="btn btn-primary" onclick="copyFormattedEmail()" style="padding: 4px 10px; font-size:0.7rem;">📋 Copy to Clipboard</button>
+                <button class="btn btn-primary" onclick="copyFormattedEmail()" style="padding: 4px 10px; font-size:0.8rem;">📋 Copy to Clipboard</button>
             </div>
             <div class="preview-panel-body">
                 <div id="emailPreview" class="preview-container">
@@ -783,10 +803,27 @@
             loadFromLocalStorage();
             renderDailyNotesEditor();
             renderIssuesEditor();
+            updateDropdownLabels();
             renderPreview();
         });
 
+        function updateDropdownLabels() {
+            const pickerIds = ['moveIns', 'moveOuts', 'transfers', 'pastDueCust', 'unrentableUnits'];
+            pickerIds.forEach(id => {
+                const inputEl = document.getElementById(id);
+                const pickerEl = document.getElementById(`picker-${id}`);
+                if (inputEl && pickerEl) {
+                    const defaultOpt = pickerEl.querySelector('.default-opt');
+                    if (defaultOpt) {
+                        const val = inputEl.value.trim();
+                        defaultOpt.textContent = val !== '' ? val : '0';
+                    }
+                }
+            });
+        }
+
         function handleInput() {
+            updateDropdownLabels();
             renderPreview();
             saveToLocalStorage();
         }
@@ -795,7 +832,9 @@
         function saveToLocalStorage() {
             const inputs = {};
             document.querySelectorAll('input[id], select[id]').forEach(el => {
-                inputs[el.id] = el.value;
+                if (el.id && !el.id.startsWith('picker-')) {
+                    inputs[el.id] = el.value;
+                }
             });
 
             const state = {
@@ -877,7 +916,7 @@
 
                 dayBlock.innerHTML = `
                     <div class="day-header">
-                        <input type="text" value="${escapeAttr(day.dayHeader)}" style="font-weight:bold; width:180px;" oninput="updateDayHeader(${dayIdx}, this.value)">
+                        <input type="text" value="${escapeAttr(day.dayHeader)}" style="font-weight:bold; width:220px;" oninput="updateDayHeader(${dayIdx}, this.value)">
                         <button class="btn-icon-del" style="margin-left:auto;" onclick="removeDayBlock(${dayIdx})">Delete Day</button>
                     </div>
                     <div class="task-list">
@@ -936,14 +975,17 @@
                 card.className = 'issue-card';
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-weight:800; font-size:0.75rem; color:var(--brand-gray);">Issue #${idx + 1}</span>
+                        <span style="font-weight:800; font-size:0.85rem; color:var(--brand-gray);">Issue #${idx + 1}</span>
                         <button class="btn-icon-del" onclick="removeIssueCard(${idx})">Remove Issue</button>
                     </div>
                     <input type="text" value="${escapeAttr(issue.title)}" placeholder="Issue Description" oninput="updateIssue(${idx}, 'title', this.value)">
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                         <div>
                             <label>Reported? (Y/N):</label>
-                            <input type="text" value="${escapeAttr(issue.reported)}" oninput="updateIssue(${idx}, 'reported', this.value)">
+                            <select onchange="updateIssue(${idx}, 'reported', this.value)">
+                                <option value="Y" ${issue.reported === 'Y' ? 'selected' : ''}>Y</option>
+                                <option value="N" ${issue.reported === 'N' ? 'selected' : ''}>N</option>
+                            </select>
                         </div>
                         <div>
                             <label>Reported To:</label>
@@ -956,7 +998,10 @@
                     </div>
                     <div>
                         <label>Resolved? (Y/N):</label>
-                        <input type="text" value="${escapeAttr(issue.resolved)}" oninput="updateIssue(${idx}, 'resolved', this.value)">
+                        <select onchange="updateIssue(${idx}, 'resolved', this.value)">
+                            <option value="Y" ${issue.resolved === 'Y' ? 'selected' : ''}>Y</option>
+                            <option value="N" ${issue.resolved === 'N' ? 'selected' : ''}>N</option>
+                        </select>
                     </div>
                 `;
                 container.appendChild(card);
