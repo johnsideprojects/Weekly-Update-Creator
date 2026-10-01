@@ -97,6 +97,8 @@
 
         .btn-primary { background: var(--brand-blue); color: white; }
         .btn-primary:hover { background: #0056c6; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #1e8449; }
         .btn-danger-outline { background: transparent; border: 1px solid var(--brand-red); color: var(--brand-red); }
         .btn-danger-outline:hover { background: #fdf0ef; }
         .btn-outline { background: transparent; border: 1px solid #ccc; color: var(--text-dark); }
@@ -699,7 +701,10 @@
         <div class="panel">
             <div class="panel-header">
                 <span>Email Preview Output</span>
-                <button class="btn btn-primary" onclick="copyFormattedEmail()" style="padding: 4px 10px; font-size:0.8rem;">📋 Copy to Clipboard</button>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="copyFormattedEmail()" style="padding: 4px 10px; font-size:0.8rem;">📋 Copy to Clipboard</button>
+                    <button class="btn btn-success" onclick="openInOutlook()" style="padding: 4px 10px; font-size:0.8rem;">✉️ Open in Outlook</button>
+                </div>
             </div>
             <div class="preview-panel-body">
                 <div id="emailPreview" class="preview-container">
@@ -1131,6 +1136,18 @@
             } catch (err) {
                 alert("Failed to copy automatically. Please select the right panel manually and press Ctrl+C.");
             }
+        }
+
+        function openInOutlook() {
+            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
+            const title = getVal('reportTitle') || 'AA';
+            const subject = encodeURIComponent(`${title} Weekly Update`);
+
+            const previewEl = document.getElementById('emailPreview');
+            let text = previewEl.innerText || previewEl.textContent;
+
+            const mailtoUrl = `mailto:?subject=${subject}&body=${encodeURIComponent(text)}`;
+            window.location.href = mailtoUrl;
         }
 
         function showToast(msg) {
