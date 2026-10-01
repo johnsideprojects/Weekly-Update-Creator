@@ -448,19 +448,13 @@
                     <div class="form-grid">
                         <div class="form-row">
                             <label for="reportTitle">Report Title / Facility Code:</label>
-                            <input type="text" id="reportTitle" value="AA" style="font-weight:700;" oninput="handleInput()">
+                            <input type="text" id="reportTitle" value="AA Self-Storage Leland Weekly Update" style="font-weight:700;" oninput="handleInput()">
+                        </div>
+                        <div class="form-row">
+                            <label for="emailRecipient">Recipient Email(s):</label>
+                            <input type="text" id="emailRecipient" value="" placeholder="e.g. manager@aastorage.com" oninput="handleInput()">
                         </div>
                     </div>
-                </div>
-
-                <!-- Inside Section 0: Header Title / Location -->
-                <div class="form-row">
-                    <label for="emailTo">Recipient Email(s):</label>
-                    <input type="text" id="emailTo" value="regionalmanager@aastorage.com" oninput="handleInput()">
-                </div>
-                <div class="form-row">
-                    <label for="emailSubject">Email Subject:</label>
-                    <input type="text" id="emailSubject" value="AA Self-Storage Leland - Weekly Update" oninput="handleInput()">
                 </div>
 
                 <!-- 1. MOVE INS -->
@@ -713,7 +707,7 @@
                 <span>Email Preview Output</span>
                 <div style="display:flex; gap:8px;">
                     <button class="btn btn-primary" onclick="copyFormattedEmail()" style="padding: 4px 10px; font-size:0.8rem;">📋 Copy to Clipboard</button>
-                    <button class="btn btn-success" onclick="openInOutlook()" style="padding: 4px 10px; font-size:0.8rem;">✉️ Open in Outlook</button>
+                    <button class="btn btn-success" onclick="openInOutlook()" style="padding: 4px 10px; font-size:0.8rem;">✉️️ Open in Outlook</button>
                 </div>
             </div>
             <div class="preview-panel-body">
@@ -902,7 +896,7 @@
 
         function showSaveStatus() {
             const statusEl = document.getElementById('saveStatus');
-            statusEl.style.opacity = '1';
+            if (statusEl) statusEl.style.opacity = '1';
         }
 
         function syncPicker(inputId, selectEl) {
@@ -916,6 +910,7 @@
         // DAILY NOTES EDITING FUNCTIONS
         function renderDailyNotesEditor() {
             const container = document.getElementById('dailyNotesContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             dailyNotes.forEach((day, dayIdx) => {
@@ -983,6 +978,7 @@
         // UNRESOLVED ISSUES EDITING FUNCTIONS
         function renderIssuesEditor() {
             const container = document.getElementById('issuesContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             issues.forEach((issue, idx) => {
@@ -1057,11 +1053,11 @@
             return val + '%';
         }
 
-        // RENDER PREVIEW (EMAIL OUTPUT)
+        // RENDER PREVIEW (EMAIL OUTPUT WITH INLINE HTML STYLING FOR OUTLOOK PASTE)
         function renderPreview() {
             const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
 
-            const title = getVal('reportTitle') || 'AA';
+            const title = getVal('reportTitle') || 'AA Self-Storage Leland Weekly Update';
             const m1Name = getVal('depMonth1Name');
             const y1 = getVal('depYear1');
             const priorY1 = (parseInt(y1) - 1) || (y1 + " (Prior)");
@@ -1071,14 +1067,14 @@
             const priorY2 = (parseInt(y2) - 1) || (y2 + " (Prior)");
 
             let dailyNotesHTML = dailyNotes.map(d => `
-                <div class="preview-day-header"><b>${escapeHtml(d.dayHeader)}</b></div>
-                <ul class="preview-tasks-ul">
-                    ${d.tasks.map(t => `<li>${escapeHtml(t)}</li>`).join('')}
+                <div class="preview-day-header" style="font-weight:bold; text-transform:uppercase; margin-top:10px; margin-bottom:4px; color:#000;">${escapeHtml(d.dayHeader)}</div>
+                <ul class="preview-tasks-ul" style="margin:0 0 10px 0; padding-left:20px;">
+                    ${d.tasks.map(t => `<li style="margin-bottom:2px;">${escapeHtml(t)}</li>`).join('')}
                 </ul>
             `).join('');
 
             let issuesHTML = issues.map(i => `
-                <div class="preview-issue-block">
+                <div class="preview-issue-block" style="margin-bottom:12px; padding-bottom:8px; border-bottom:1px dashed #ccc;">
                     <div><b>${escapeHtml(i.title)}</b></div>
                     <div><b>Has it been reported?</b> ${escapeHtml(i.reported)} &nbsp;&nbsp;&nbsp;&nbsp; <b>Reported to:</b> ${escapeHtml(i.reportedTo)}</div>
                     <div><b>Steps taken:</b> ${escapeHtml(i.stepsTaken)}</div>
@@ -1086,54 +1082,85 @@
                 </div>
             `).join('');
 
+            const h2Style = 'font-size:1.15rem; font-weight:bold; text-transform:uppercase; margin:18px 0 6px 0; padding-bottom:2px; border-bottom:1px solid #000; color:#000;';
+            const labelStyle = 'font-weight:bold; display:inline-block; width:220px;';
+
             const html = `
-                <h2><b>${escapeHtml(title)}</b></h2>
+                <h2 style="${h2Style} margin-top:0;">${escapeHtml(title)}</h2>
                 
-                <h2><b>MOVE INS:</b></h2>
-                <div class="preview-row"><span class="preview-label"><b>Move Ins:</b></span><span class="preview-val">${getVal('moveIns')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Move Out:</b></span><span class="preview-val">${getVal('moveOuts')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Transfers:</b></span><span class="preview-val">${getVal('transfers')}</span></div>
+                <h2 style="${h2Style}">MOVE INS:</h2>
+                <div class="preview-row"><span style="${labelStyle}">Move Ins:</span><span class="preview-val">${getVal('moveIns')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Move Out:</span><span class="preview-val">${getVal('moveOuts')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Transfers:</span><span class="preview-val">${getVal('transfers')}</span></div>
 
-                <h2><b>OCCUPANCY:</b></h2>
-                <div class="preview-row"><span class="preview-label"><b>Standard:</b></span><span class="preview-val">${formatPercent('occStandard')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Climate Controlled:</b></span><span class="preview-val">${formatPercent('occClimate')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Covered Boat/RV:</b></span><span class="preview-val">${formatPercent('occBoat')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Portable:</b></span><span class="preview-val">${formatPercent('occPortable')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Total Occupancy:</b></span><span class="preview-val">${formatPercent('occTotal')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Last Year’s Occupancy:</b></span><span class="preview-val">${formatPercent('occLastYear')}</span></div>
+                <h2 style="${h2Style}">OCCUPANCY:</h2>
+                <div class="preview-row"><span style="${labelStyle}">Standard:</span><span class="preview-val">${formatPercent('occStandard')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Climate Controlled:</span><span class="preview-val">${formatPercent('occClimate')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Covered Boat/RV:</span><span class="preview-val">${formatPercent('occBoat')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Portable:</span><span class="preview-val">${formatPercent('occPortable')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Total Occupancy:</span><span class="preview-val">${formatPercent('occTotal')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Last Year’s Occupancy:</span><span class="preview-val">${formatPercent('occLastYear')}</span></div>
 
-                <h2><b>DELINQUENCY:</b></h2>
-                <div class="preview-row"><span class="preview-label"><b>Rate:</b></span><span class="preview-val">${formatPercent('delinqRate')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Past Due Customers:</b></span><span class="preview-val">${getVal('pastDueCust')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Past Due $'s:</b></span><span class="preview-val">$${getVal('pastDueDollars')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Total # of Rented:</b></span><span class="preview-val">${getVal('totalRented')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Past Due 60:</b></span><span class="preview-val">${getVal('pastDue60')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Past Due 30-59:</b></span><span class="preview-val">${getVal('pastDue3059')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Past Due 5-29:</b></span><span class="preview-val">${getVal('pastDue529')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Date of Last Auction:</b></span><span class="preview-val">${getVal('lastAuction')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>Date of Next Auction:</b></span><span class="preview-val">${getVal('nextAuction')}</span></div>
+                <h2 style="${h2Style}">DELINQUENCY:</h2>
+                <div class="preview-row"><span style="${labelStyle}">Rate:</span><span class="preview-val">${formatPercent('delinqRate')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Past Due Customers:</span><span class="preview-val">${getVal('pastDueCust')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Past Due $'s:</span><span class="preview-val">$${getVal('pastDueDollars')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Total # of Rented:</span><span class="preview-val">${getVal('totalRented')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Past Due 60:</span><span class="preview-val">${getVal('pastDue60')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Past Due 30-59:</span><span class="preview-val">${getVal('pastDue3059')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Past Due 5-29:</span><span class="preview-val">${getVal('pastDue529')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Date of Last Auction:</span><span class="preview-val">${getVal('lastAuction')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">Date of Next Auction:</span><span class="preview-val">${getVal('nextAuction')}</span></div>
 
-                <h2><b>DEPOSITS:</b></h2>
-                <div class="preview-row"><span class="preview-label"><b>${m1Name}: ${y1}:</b></span><span class="preview-val">$${getVal('depM1Current')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>${m1Name}: ${priorY1}:</b></span><span class="preview-val">$${getVal('depM1Prior')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>${m2Name}: ${y2}:</b></span><span class="preview-val">$${getVal('depM2Current')}</span></div>
-                <div class="preview-row"><span class="preview-label"><b>${m2Name}: ${priorY2}:</b></span><span class="preview-val">$${getVal('depM2Prior')}</span></div>
+                <h2 style="${h2Style}">DEPOSITS:</h2>
+                <div class="preview-row"><span style="${labelStyle}">${m1Name}: ${y1}:</span><span class="preview-val">$${getVal('depM1Current')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">${m1Name}: ${priorY1}:</span><span class="preview-val">$${getVal('depM1Prior')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">${m2Name}: ${y2}:</span><span class="preview-val">$${getVal('depM2Current')}</span></div>
+                <div class="preview-row"><span style="${labelStyle}">${m2Name}: ${priorY2}:</span><span class="preview-val">$${getVal('depM2Prior')}</span></div>
 
-                <h2><b>NUMBER OF UNRENTABLE UNITS:</b> <span style="font-weight:normal;">${getVal('unrentableUnits')}</span></h2>
+                <h2 style="${h2Style}">NUMBER OF UNRENTABLE UNITS: <span style="font-weight:normal;">${getVal('unrentableUnits')}</span></h2>
 
-                <h2><b>WEEKLY NOTES:</b></h2>
+                <h2 style="${h2Style}">WEEKLY NOTES:</h2>
                 ${dailyNotesHTML}
 
-                <h2><b>Unresolved/Ongoing Issues</b></h2>
+                <h2 style="${h2Style}">Unresolved/Ongoing Issues</h2>
                 ${issuesHTML}
             `;
 
-            document.getElementById('emailPreview').innerHTML = html;
+            const previewEl = document.getElementById('emailPreview');
+            if (previewEl) previewEl.innerHTML = html;
         }
 
-        function copyFormattedEmail() {
+        // COPIES WITH BOTH text/html AND text/plain MEMORY ALLOCATIONS
+        async function copyFormattedEmail() {
             const previewEl = document.getElementById('emailPreview');
-            
+            if (!previewEl) return;
+
+            const rawHtml = previewEl.innerHTML;
+            const plainText = previewEl.innerText;
+
+            try {
+                if (navigator.clipboard && window.ClipboardItem) {
+                    const htmlBlob = new Blob([rawHtml], { type: 'text/html' });
+                    const textBlob = new Blob([plainText], { type: 'text/plain' });
+                    const item = new ClipboardItem({
+                        'text/html': htmlBlob,
+                        'text/plain': textBlob
+                    });
+                    await navigator.clipboard.write([item]);
+                    showToast("Copied with full HTML formatting! Paste (Ctrl+V) directly into Outlook.");
+                } else {
+                    fallbackCopy();
+                }
+            } catch (err) {
+                fallbackCopy();
+            }
+        }
+
+        function fallbackCopy() {
+            const previewEl = document.getElementById('emailPreview');
+            if (!previewEl) return;
+
             const range = document.createRange();
             range.selectNode(previewEl);
             window.getSelection().removeAllRanges();
@@ -1142,26 +1169,29 @@
             try {
                 document.execCommand('copy');
                 window.getSelection().removeAllRanges();
-                showToast("Copied formatted update to clipboard!");
+                showToast("Copied to clipboard!");
             } catch (err) {
-                alert("Failed to copy automatically. Please select the right panel manually and press Ctrl+C.");
+                alert("Failed to copy. Please select the preview box manually and press Ctrl+C.");
             }
         }
 
+        // OPENS OUTLOOK VIA MAILTO PROTOCOL WITH NON-DUPLICATED SUBJECT
         function openInOutlook() {
             const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
-            const title = getVal('reportTitle') || 'AA';
-            const subject = encodeURIComponent(`${title} Weekly Update`);
+            const recipient = encodeURIComponent(getVal('emailRecipient') || '');
+            const title = getVal('reportTitle') || 'AA Self-Storage Leland Weekly Update';
+            const subject = encodeURIComponent(title);
 
             const previewEl = document.getElementById('emailPreview');
-            let text = previewEl.innerText || previewEl.textContent;
+            let text = previewEl ? (previewEl.innerText || previewEl.textContent) : '';
 
-            const mailtoUrl = `mailto:?subject=${subject}&body=${encodeURIComponent(text)}`;
+            const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${encodeURIComponent(text)}`;
             window.location.href = mailtoUrl;
         }
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
+            if (!toast) return;
             toast.textContent = msg;
             toast.style.display = 'block';
             setTimeout(() => { toast.style.display = 'none'; }, 2800);
