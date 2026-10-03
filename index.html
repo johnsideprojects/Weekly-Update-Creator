@@ -1082,8 +1082,17 @@
                 </div>
             `).join('');
         
-            const h2Style = 'font-size:1.15rem; font-weight:bold; text-transform:uppercase; margin:18px 0 6px 0; padding-bottom:2px; border-bottom:1px solid #000; color:#000;';
+            // Helper for rendering section headers with Outlook-compatible bottom border
+            const makeHeader = (text) => `
+                <table style="width:100%; border-collapse:collapse; margin-top:16px; margin-bottom:6px;">
+                    <tr>
+                        <td style="font-size:1.15rem; font-weight:bold; text-transform:uppercase; border-bottom:1.5px solid #000000; padding-bottom:3px; color:#000000;">
+                            ${text}
+                        </td>
+                    </tr>
+                </table>`;
         
+            // Helper for standard key-value rows
             const makeRow = (label, val) => `
                 <tr>
                     <td style="font-weight:bold; width:220px; padding:2px 0; vertical-align:top;">${label}</td>
@@ -1091,17 +1100,17 @@
                 </tr>`;
         
             const html = `
-                <h2 style="${h2Style} margin-top:0;">${escapeHtml(title)}</h2>
+                <div style="font-size:1.2rem; font-weight:bold; margin-bottom:12px; color:#000;">${escapeHtml(title)}</div>
                 
-                <h2 style="${h2Style}">MOVE INS:</h2>
-                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
+                ${makeHeader('MOVE INS:')}
+                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
                     ${makeRow('Move Ins:', getVal('moveIns'))}
                     ${makeRow('Move Out:', getVal('moveOuts'))}
                     ${makeRow('Transfers:', getVal('transfers'))}
                 </table>
         
-                <h2 style="${h2Style}">OCCUPANCY:</h2>
-                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
+                ${makeHeader('OCCUPANCY:')}
+                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
                     ${makeRow('Standard:', formatPercent('occStandard'))}
                     ${makeRow('Climate Controlled:', formatPercent('occClimate'))}
                     ${makeRow('Covered Boat/RV:', formatPercent('occBoat'))}
@@ -1110,8 +1119,8 @@
                     ${makeRow('Last Year’s Occupancy:', formatPercent('occLastYear'))}
                 </table>
         
-                <h2 style="${h2Style}">DELINQUENCY:</h2>
-                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
+                ${makeHeader('DELINQUENCY:')}
+                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
                     ${makeRow('Rate:', formatPercent('delinqRate'))}
                     ${makeRow('Past Due Customers:', getVal('pastDueCust'))}
                     ${makeRow('Past Due $\'s:', '$' + getVal('pastDueDollars'))}
@@ -1123,20 +1132,21 @@
                     ${makeRow('Date of Next Auction:', getVal('nextAuction'))}
                 </table>
         
-                <h2 style="${h2Style}">DEPOSITS:</h2>
-                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
-                    ${makeRow(`${m1Name}:${y1}:`, '$' + getVal('depM1Current'))}
-                    ${makeRow(`${m1Name}:${priorY1}:`, '$' + getVal('depM1Prior'))}
-                    ${makeRow(`${m2Name}:${y2}:`, '$' + getVal('depM2Current'))}
-                    ${makeRow(`${m2Name}:${priorY2}:`, '$' + getVal('depM2Prior'))}
+                ${makeHeader('DEPOSITS:')}
+                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
+                    ${makeRow(`${m1Name}${y1}:`, '$' + getVal('depM1Current'))}
+                    ${makeRow(`${m1Name}${priorY1}:`, '$' + getVal('depM1Prior'))}
+                    ${makeRow(`${m2Name}${y2}:`, '$' + getVal('depM2Current'))}
+                    ${makeRow(`${m2Name}${priorY2}:`, '$' + getVal('depM2Prior'))}
                 </table>
         
-                <h2 style="${h2Style}">NUMBER OF UNRENTABLE UNITS: <span style="font-weight:normal;">${getVal('unrentableUnits')}</span></h2>
+                ${makeHeader('NUMBER OF UNRENTABLE UNITS:')}
+                <div style="font-size:11pt; margin-top:4px;">${getVal('unrentableUnits')}</div>
         
-                <h2 style="${h2Style}">WEEKLY NOTES:</h2>
+                ${makeHeader('WEEKLY NOTES:')}
                 ${dailyNotesHTML}
         
-                <h2 style="${h2Style}">Unresolved/Ongoing Issues</h2>
+                ${makeHeader('Unresolved/Ongoing Issues')}
                 ${issuesHTML}
             `;
         
