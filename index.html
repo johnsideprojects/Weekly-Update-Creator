@@ -1073,18 +1073,23 @@
                 </ul>
             `).join('');
         
+            // Table-based rendering for issues ensures Outlook renders the dashed separator line
             let issuesHTML = issues.map(i => `
-                <div style="margin-bottom:12px; padding-bottom:8px; border-bottom:1px dashed #ccc;">
-                    <div><b>${escapeHtml(i.title)}</b></div>
-                    <div><b>Has it been reported?</b> ${escapeHtml(i.reported)} &nbsp;&nbsp;&nbsp;&nbsp; <b>Reported to:</b> ${escapeHtml(i.reportedTo)}</div>
-                    <div><b>Steps taken:</b> ${escapeHtml(i.stepsTaken)}</div>
-                    <div><b>Resolved?</b> ${escapeHtml(i.resolved)} <i>(once resolved, remove from Weekly Update the following week)</i></div>
-                </div>
+                <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:inherit; font-family:inherit;">
+                    <tr>
+                        <td style="padding-bottom:8px; border-bottom:1px dashed #cccccc; color:#000000;">
+                            <div><b>${escapeHtml(i.title)}</b></div>
+                            <div><b>Has it been reported?</b> ${escapeHtml(i.reported)} &nbsp;&nbsp;&nbsp;&nbsp; <b>Reported to:</b> ${escapeHtml(i.reportedTo)}</div>
+                            <div><b>Steps taken:</b> ${escapeHtml(i.stepsTaken)}</div>
+                            <div><b>Resolved?</b> ${escapeHtml(i.resolved)} <i>(once resolved, remove from Weekly Update the following week)</i></div>
+                        </td>
+                    </tr>
+                </table>
             `).join('');
         
-            // Helper for rendering section headers with Outlook-compatible bottom border
+            // Table-based header ensures reliable solid horizontal borders across Outlook engines
             const makeHeader = (text) => `
-                <table style="width:100%; border-collapse:collapse; margin-top:16px; margin-bottom:6px;">
+                <table style="width:100%; border-collapse:collapse; margin-top:18px; margin-bottom:6px;">
                     <tr>
                         <td style="font-size:1.15rem; font-weight:bold; text-transform:uppercase; border-bottom:1.5px solid #000000; padding-bottom:3px; color:#000000;">
                             ${text}
@@ -1092,7 +1097,7 @@
                     </tr>
                 </table>`;
         
-            // Helper for standard key-value rows
+            // Standard key-value rows inheriting container font sizes
             const makeRow = (label, val) => `
                 <tr>
                     <td style="font-weight:bold; width:220px; padding:2px 0; vertical-align:top;">${label}</td>
@@ -1100,17 +1105,17 @@
                 </tr>`;
         
             const html = `
-                <div style="font-size:1.2rem; font-weight:bold; margin-bottom:12px; color:#000;">${escapeHtml(title)}</div>
+                <div style="font-size:1.15rem; font-weight:bold; text-transform:uppercase; margin-bottom:12px; color:#000;">${escapeHtml(title)}</div>
                 
                 ${makeHeader('MOVE INS:')}
-                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
+                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
                     ${makeRow('Move Ins:', getVal('moveIns'))}
                     ${makeRow('Move Out:', getVal('moveOuts'))}
                     ${makeRow('Transfers:', getVal('transfers'))}
                 </table>
         
                 ${makeHeader('OCCUPANCY:')}
-                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
+                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
                     ${makeRow('Standard:', formatPercent('occStandard'))}
                     ${makeRow('Climate Controlled:', formatPercent('occClimate'))}
                     ${makeRow('Covered Boat/RV:', formatPercent('occBoat'))}
@@ -1120,7 +1125,7 @@
                 </table>
         
                 ${makeHeader('DELINQUENCY:')}
-                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
+                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
                     ${makeRow('Rate:', formatPercent('delinqRate'))}
                     ${makeRow('Past Due Customers:', getVal('pastDueCust'))}
                     ${makeRow('Past Due $\'s:', '$' + getVal('pastDueDollars'))}
@@ -1133,7 +1138,7 @@
                 </table>
         
                 ${makeHeader('DEPOSITS:')}
-                <table style="width:100%; border-collapse:collapse; font-size:11pt; font-family:Calibri, Arial, sans-serif;">
+                <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
                     ${makeRow(`${m1Name}${y1}:`, '$' + getVal('depM1Current'))}
                     ${makeRow(`${m1Name}${priorY1}:`, '$' + getVal('depM1Prior'))}
                     ${makeRow(`${m2Name}${y2}:`, '$' + getVal('depM2Current'))}
@@ -1141,12 +1146,12 @@
                 </table>
         
                 ${makeHeader('NUMBER OF UNRENTABLE UNITS:')}
-                <div style="font-size:11pt; margin-top:4px;">${getVal('unrentableUnits')}</div>
+                <div style="font-size:inherit; margin-top:4px;">${getVal('unrentableUnits')}</div>
         
                 ${makeHeader('WEEKLY NOTES:')}
                 ${dailyNotesHTML}
         
-                ${makeHeader('Unresolved/Ongoing Issues')}
+                ${makeHeader('UNRESOLVED/ONGOING ISSUES')}
                 ${issuesHTML}
             `;
         
