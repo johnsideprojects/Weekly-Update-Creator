@@ -1146,7 +1146,13 @@
                 </table>
         
                 ${makeHeader('NUMBER OF UNRENTABLE UNITS:')}
-                <div style="font-size:inherit; margin-top:4px;">${getVal('unrentableUnits')}</div>
+                <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:inherit; font-family:inherit;">
+                    <tr>
+                        <td style="padding:4px 0 8px 0; vertical-align:top; color:#000000;">
+                            ${getVal('unrentableUnits')}
+                        </td>
+                    </tr>
+                </table>
         
                 ${makeHeader('WEEKLY NOTES:')}
                 ${dailyNotesHTML}
