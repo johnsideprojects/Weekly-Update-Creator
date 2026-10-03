@@ -97,10 +97,8 @@
 
         .btn-primary { background: var(--brand-blue); color: white; }
         .btn-primary:hover { background: #0056c6; }
-        .btn-success { background: #27ae60; color: white; }
-        .btn-success:hover { background: #1e8449; }
-        .btn-danger-outline { background: transparent; border: 1px solid var(--brand-red); color: var(--brand-red); }
-        .btn-danger-outline:hover { background: #fdf0ef; }
+        .btn-purple { background: #8e44ad; color: white; }
+        .btn-purple:hover { background: #732d91; }
         .btn-outline { background: transparent; border: 1px solid #ccc; color: var(--text-dark); }
         .btn-outline:hover { background: #eee; }
 
@@ -243,7 +241,7 @@
             pointer-events: none;
         }
 
-        input[type="text"], input[type="number"], select, textarea {
+        input[type="text"], input[type="number"], input[type="date"], select, textarea {
             font-family: inherit;
             font-size: var(--editor-font-size);
             padding: 6px 10px;
@@ -354,58 +352,6 @@
             margin-bottom: 24px;
         }
 
-        .preview-container h2 {
-            font-size: 1.15rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 18px 0 6px 0;
-            padding-bottom: 2px;
-            border-bottom: 1px solid #000;
-            color: #000;
-        }
-
-        .preview-container h2:first-child {
-            margin-top: 0;
-        }
-
-        .preview-row {
-            margin-bottom: 4px;
-            display: flex;
-        }
-
-        .preview-label {
-            font-weight: bold;
-            display: inline-block;
-            min-width: 220px;
-        }
-
-        .preview-val {
-            display: inline-block;
-        }
-
-        .preview-day-header {
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 10px;
-            margin-bottom: 4px;
-            color: #000;
-        }
-
-        .preview-tasks-ul {
-            margin: 0 0 10px 0;
-            padding-left: 20px;
-        }
-
-        .preview-tasks-ul li {
-            margin-bottom: 2px;
-        }
-
-        .preview-issue-block {
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed #ccc;
-        }
-
         .toast {
             position: fixed;
             bottom: 20px;
@@ -429,7 +375,6 @@
 
         <div class="header-actions">
             <span id="saveStatus" class="save-indicator">✓ Auto-saved locally</span>
-            <button class="btn btn-danger-outline" onclick="clearDraft()">🗑 Clear Draft</button>
         </div>
     </header>
 
@@ -707,7 +652,7 @@
                 <span>Email Preview Output</span>
                 <div style="display:flex; gap:8px;">
                     <button class="btn btn-primary" onclick="copyFormattedEmail()" style="padding: 4px 10px; font-size:0.8rem;">📋 Copy to Clipboard</button>
-                    <button class="btn btn-success" onclick="openInOutlook()" style="padding: 4px 10px; font-size:0.8rem;">✉️️ Open in Outlook</button>
+                    <button class="btn btn-purple" onclick="downloadEML()" style="padding: 4px 10px; font-size:0.8rem;">📥 Download .EML - Outlook</button>
                 </div>
             </div>
             <div class="preview-panel-body">
@@ -727,6 +672,7 @@
         const defaultDailyNotes = [
             {
                 dayHeader: "MON 8-31-26",
+                dateVal: "2026-08-31",
                 tasks: [
                     "Manager's Name (and maintenance if applicable) working. Assistant Manager off.",
                     "Contacted past dues and took payments.",
@@ -737,6 +683,7 @@
             },
             {
                 dayHeader: "TUE 9-1-26",
+                dateVal: "2026-09-01",
                 tasks: [
                     "Manager's Name and Assistant Manager's Name working.",
                     "Cut locks and took pictures of auction units.",
@@ -747,6 +694,7 @@
             },
             {
                 dayHeader: "WED 9-2-26",
+                dateVal: "2026-09-02",
                 tasks: [
                     "Manager's Name and Assistant Manager's Name working.",
                     "Kristen, Melissa T, and MG onsite for facility check.",
@@ -757,6 +705,7 @@
             },
             {
                 dayHeader: "THU 9-3-26",
+                dateVal: "2026-09-03",
                 tasks: [
                     "Manager's Name and Assistant Manager's Name working.",
                     "Vacuumed A building.",
@@ -767,6 +716,7 @@
             },
             {
                 dayHeader: "FRI 9-4-26",
+                dateVal: "2026-09-04",
                 tasks: [
                     "Assistant Manager's Name working. Facility Manager on vacation.",
                     "Did the Walk Thru and checked all thermostats.",
@@ -777,6 +727,7 @@
             },
             {
                 dayHeader: "SAT 9-5-26",
+                dateVal: "2026-09-05",
                 tasks: [
                     "Manager's Name and Assistant Manager's Name working.",
                     "Walked/rode the lot and picked up trash.",
@@ -815,6 +766,21 @@
             updateDropdownLabels();
             renderPreview();
         });
+
+        function formatDateHeader(dateString) {
+            if (!dateString) return '';
+            const parts = dateString.split('-');
+            if (parts.length !== 3) return dateString;
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            const day = parseInt(parts[2], 10);
+            
+            const date = new Date(year, month - 1, day);
+            const dayName = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+            const shortYear = date.getFullYear().toString().slice(-2);
+            
+            return `${dayName} ${month}-${day}-${shortYear}`;
+        }
 
         function updateDropdownLabels() {
             const pickerIds = ['moveIns', 'moveOuts', 'transfers', 'pastDueCust', 'unrentableUnits'];
@@ -887,13 +853,6 @@
             }
         }
 
-        function clearDraft() {
-            if (confirm("Clear saved draft and reset all fields back to default?")) {
-                localStorage.removeItem(STORAGE_KEY);
-                location.reload();
-            }
-        }
-
         function showSaveStatus() {
             const statusEl = document.getElementById('saveStatus');
             if (statusEl) statusEl.style.opacity = '1';
@@ -926,7 +885,8 @@
 
                 dayBlock.innerHTML = `
                     <div class="day-header">
-                        <input type="text" value="${escapeAttr(day.dayHeader)}" style="font-weight:bold; width:220px;" oninput="updateDayHeader(${dayIdx}, this.value)">
+                        <input type="date" value="${day.dateVal || ''}" style="font-weight:bold; width:160px;" onchange="handleDateChange(${dayIdx}, this.value)">
+                        <input type="text" value="${escapeAttr(day.dayHeader)}" style="font-weight:bold; width:160px;" oninput="updateDayHeader(${dayIdx}, this.value)">
                         <button class="btn-icon-del" style="margin-left:auto;" onclick="removeDayBlock(${dayIdx})">Delete Day</button>
                     </div>
                     <div class="task-list">
@@ -936,6 +896,15 @@
                 `;
                 container.appendChild(dayBlock);
             });
+        }
+
+        function handleDateChange(dayIdx, dateVal) {
+            dailyNotes[dayIdx].dateVal = dateVal;
+            if (dateVal) {
+                dailyNotes[dayIdx].dayHeader = formatDateHeader(dateVal);
+            }
+            renderDailyNotesEditor();
+            handleInput();
         }
 
         function updateDayHeader(dayIdx, val) {
@@ -961,8 +930,15 @@
         }
 
         function addDayBlock() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+
             dailyNotes.push({
-                dayHeader: "NEW DAY 0-0-26",
+                dayHeader: formatDateHeader(todayStr),
+                dateVal: todayStr,
                 tasks: ["Task 1 description..."]
             });
             renderDailyNotesEditor();
@@ -1163,6 +1139,42 @@
             if (previewEl) previewEl.innerHTML = html;
         }
 
+        // DOWNLOAD AS .EML FILE
+        function downloadEML() {
+            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
+            const recipient = getVal('emailRecipient') || '';
+            const title = getVal('reportTitle') || 'AA Self-Storage Leland Weekly Update';
+            const previewEl = document.getElementById('emailPreview');
+            const htmlContent = previewEl ? previewEl.innerHTML : '';
+
+            const emlContent = 
+`To: ${recipient}
+Subject: ${title}
+X-Unsent: 1
+Content-Type: text/html; charset=utf-8
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body style="font-family: Arial, sans-serif; color: #000000;">
+${htmlContent}
+</body>
+</html>`;
+
+            const blob = new Blob([emlContent], { type: 'message/rfc822' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.eml`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+
+            showToast("EML file downloaded! Double-click to open directly in Outlook.");
+        }
+
         // COPIES WITH BOTH text/html AND text/plain MEMORY ALLOCATIONS
         async function copyFormattedEmail() {
             const previewEl = document.getElementById('emailPreview');
@@ -1205,20 +1217,6 @@
             } catch (err) {
                 alert("Failed to copy. Please select the preview box manually and press Ctrl+C.");
             }
-        }
-
-        // OPENS OUTLOOK VIA MAILTO PROTOCOL WITH NON-DUPLICATED SUBJECT
-        function openInOutlook() {
-            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
-            const recipient = encodeURIComponent(getVal('emailRecipient') || '');
-            const title = getVal('reportTitle') || 'AA Self-Storage Leland Weekly Update';
-            const subject = encodeURIComponent(title);
-
-            const previewEl = document.getElementById('emailPreview');
-            let text = previewEl ? (previewEl.innerText || previewEl.textContent) : '';
-
-            const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${encodeURIComponent(text)}`;
-            window.location.href = mailtoUrl;
         }
 
         function showToast(msg) {
