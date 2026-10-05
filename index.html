@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AA Self-Storage Leland Weekly Update</title>
+    <title>Weekly Update Tool</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;700;800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg-off-white: #F4F1E8;
@@ -18,7 +19,7 @@
             --white: #ffffff;
             --header-height: 62px;
 
-            /* Fixed 18pt/18px Font Sizes */
+            /* Base Font Sizes */
             --editor-font-size: 18px;
             --preview-font-size: 18px;
         }
@@ -131,6 +132,11 @@
 
         .preview-panel-body {
             font-size: var(--preview-font-size);
+            background-color: #eef1f5;
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            display: block;
         }
 
         .panel-header {
@@ -158,15 +164,6 @@
             gap: 16px;
         }
 
-        .preview-panel-body {
-            background-color: #eef1f5;
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-            display: block;
-        }
-
-        /* FORM SECTION STYLES */
         .form-section {
             border: 1px solid var(--border-color);
             border-radius: 6px;
@@ -263,7 +260,6 @@
             font-size: var(--editor-font-size);
         }
 
-        /* DAILY NOTES SECTION */
         .day-block {
             border: 1px solid #e2e2e2;
             border-radius: 6px;
@@ -323,7 +319,6 @@
         }
         .btn-add-sub:hover { background: #dce9ff; }
 
-        /* ISSUE CARD STYLES */
         .issue-card {
             border: 1px solid #e0e0e0;
             border-radius: 6px;
@@ -336,7 +331,7 @@
             font-size: var(--editor-font-size);
         }
 
-        /* PREVIEW PANEL STYLES */
+        /* Preview output document style */
         .preview-container {
             background: #ffffff;
             border: 1px solid #dcdcdc;
@@ -371,15 +366,15 @@
 <body>
 
     <header>
-        <div class="header-title">AA Self-Storage Leland Weekly Update</div>
+        <div class="header-title" id="mainHeaderTitle">Facility Name - Weekly Update</div>
 
         <div class="header-actions">
+            <button class="btn btn-outline" onclick="resetForm()" style="padding: 4px 10px; font-size:0.8rem;">↺ Reset Form</button>
             <span id="saveStatus" class="save-indicator">✓ Auto-saved locally</span>
         </div>
     </header>
 
     <main class="app-container">
-        <!-- LEFT COLUMN: FORM EDITING CONTROLS -->
         <div class="panel">
             <div class="panel-header">
                 <span>Update Input Fields</span>
@@ -393,11 +388,11 @@
                     <div class="form-grid">
                         <div class="form-row">
                             <label for="reportTitle">Report Title / Facility Code:</label>
-                            <input type="text" id="reportTitle" value="AA Self-Storage Leland Weekly Update" style="font-weight:700;" oninput="handleInput()">
+                            <input type="text" id="reportTitle" value="Facility Name - Weekly Update" style="font-weight:700;" oninput="handleInput()">
                         </div>
                         <div class="form-row">
                             <label for="emailRecipient">Recipient Email(s):</label>
-                            <input type="text" id="emailRecipient" value="" placeholder="e.g. manager@aastorage.com" oninput="handleInput()">
+                            <input type="text" id="emailRecipient" value="weekly.updates@aa-self-storage.com" placeholder="e.g. manager@facility.com" oninput="handleInput()">
                         </div>
                     </div>
                 </div>
@@ -409,9 +404,9 @@
                         <div class="form-row">
                             <label for="moveIns">Move Ins:</label>
                             <div class="input-group">
-                                <input type="number" id="moveIns" value="8" oninput="handleInput()">
+                                <input type="number" id="moveIns" value="0" oninput="handleInput()">
                                 <select id="picker-moveIns" class="num-picker" onchange="syncPicker('moveIns', this)">
-                                    <option value="" class="default-opt">8</option>
+                                    <option value="" class="default-opt">0</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -419,9 +414,9 @@
                         <div class="form-row">
                             <label for="moveOuts">Move Out:</label>
                             <div class="input-group">
-                                <input type="number" id="moveOuts" value="3" oninput="handleInput()">
+                                <input type="number" id="moveOuts" value="0" oninput="handleInput()">
                                 <select id="picker-moveOuts" class="num-picker" onchange="syncPicker('moveOuts', this)">
-                                    <option value="" class="default-opt">3</option>
+                                    <option value="" class="default-opt">0</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -429,9 +424,9 @@
                         <div class="form-row">
                             <label for="transfers">Transfers:</label>
                             <div class="input-group">
-                                <input type="number" id="transfers" value="1" oninput="handleInput()">
+                                <input type="number" id="transfers" value="0" oninput="handleInput()">
                                 <select id="picker-transfers" class="num-picker" onchange="syncPicker('transfers', this)">
-                                    <option value="" class="default-opt">1</option>
+                                    <option value="" class="default-opt">0</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -446,42 +441,49 @@
                         <div class="form-row">
                             <label for="occStandard">Standard Occupancy %:</label>
                             <div class="input-group-suffix">
-                                <input type="text" id="occStandard" value="92.4" oninput="handleInput()">
+                                <input type="text" id="occStandard" value="0.0" oninput="handleInput()">
                                 <span class="suffix">%</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <label for="occClimate">Climate Controlled %:</label>
                             <div class="input-group-suffix">
-                                <input type="text" id="occClimate" value="95.1" oninput="handleInput()">
+                                <input type="text" id="occClimate" value="0.0" oninput="handleInput()">
                                 <span class="suffix">%</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <label for="occBoat">Covered Boat/RV %:</label>
                             <div class="input-group-suffix">
-                                <input type="text" id="occBoat" value="88.0" oninput="handleInput()">
+                                <input type="text" id="occBoat" value="0.0" oninput="handleInput()">
                                 <span class="suffix">%</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <label for="occOutsideParking">Outside Parking %:</label>
                             <div class="input-group-suffix">
-                                <input type="text" id="occOutsideParking" value="100.0" oninput="handleInput()">
+                                <input type="text" id="occOutsideParking" value="0.0" oninput="handleInput()">
+                                <span class="suffix">%</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label for="occPortable">Portable %:</label>
+                            <div class="input-group-suffix">
+                                <input type="text" id="occPortable" value="0.0" oninput="handleInput()">
                                 <span class="suffix">%</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <label for="occTotal">Total Occupancy %:</label>
                             <div class="input-group-suffix">
-                                <input type="text" id="occTotal" value="93.8" oninput="handleInput()">
+                                <input type="text" id="occTotal" value="0.0" oninput="handleInput()">
                                 <span class="suffix">%</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <label for="occLastYear">Last Year’s Occupancy %:</label>
                             <div class="input-group-suffix">
-                                <input type="text" id="occLastYear" value="91.2" oninput="handleInput()">
+                                <input type="text" id="occLastYear" value="0.0" oninput="handleInput()">
                                 <span class="suffix">%</span>
                             </div>
                         </div>
@@ -495,58 +497,57 @@
                         <div class="form-row">
                             <label for="delinqRate">Delinquency Rate %:</label>
                             <div class="input-group-suffix">
-                                <input type="text" id="delinqRate" value="2.4" oninput="handleInput()">
+                                <input type="text" id="delinqRate" value="0.0" oninput="handleInput()">
                                 <span class="suffix">%</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <label for="pastDueCust">Past Due Customers:</label>
                             <div class="input-group">
-                                <input type="number" id="pastDueCust" value="11" oninput="handleInput()">
+                                <input type="number" id="pastDueCust" value="0" oninput="handleInput()">
                                 <select id="picker-pastDueCust" class="num-picker" onchange="syncPicker('pastDueCust', this)">
-                                    <option value="" class="default-opt">11</option>
+                                    <option value="" class="default-opt">0</option>
                                     <script>for(let i=0;i<=100;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
                         </div>
                         <div class="form-row">
                             <label for="pastDueDollars">Past Due $'s:</label>
-                            <input type="text" id="pastDueDollars" value="1,420.50" oninput="handleInput()">
+                            <input type="text" id="pastDueDollars" value="0.00" oninput="handleInput()">
                         </div>
                         <div class="form-row">
                             <label for="totalRented">Total # of Rented:</label>
-                            <input type="number" id="totalRented" value="482" oninput="handleInput()">
+                            <input type="number" id="totalRented" value="0" oninput="handleInput()">
                         </div>
                         <div class="form-row">
                             <label for="pastDue60">Past Due 60:</label>
-                            <input type="number" id="pastDue60" value="2" oninput="handleInput()">
+                            <input type="number" id="pastDue60" value="0" oninput="handleInput()">
                         </div>
                         <div class="form-row">
                             <label for="pastDue3059">Past Due 30-59:</label>
-                            <input type="number" id="pastDue3059" value="3" oninput="handleInput()">
+                            <input type="number" id="pastDue3059" value="0" oninput="handleInput()">
                         </div>
                         <div class="form-row">
                             <label for="pastDue529">Past Due 5-29:</label>
-                            <input type="number" id="pastDue529" value="6" oninput="handleInput()">
+                            <input type="number" id="pastDue529" value="0" oninput="handleInput()">
                         </div>
                         <div class="form-row">
                             <label for="lastAuction">Date of Last Auction:</label>
-                            <input type="text" id="lastAuction" value="08/15/2026" oninput="handleInput()">
+                            <input type="text" id="lastAuction" value="MM/DD/YYYY" oninput="handleInput()">
                         </div>
                         <div class="form-row">
                             <label for="nextAuction">Date of Next Auction:</label>
-                            <input type="text" id="nextAuction" value="09/18/2026" oninput="handleInput()">
+                            <input type="text" id="nextAuction" value="MM/DD/YYYY" oninput="handleInput()">
                         </div>
                     </div>
                 </div>
 
                 <!-- 4. DEPOSITS -->
                 <div class="form-section">
-                    <div class="section-title">4. Deposits (Configurable Months)</div>
+                    <div class="section-title">4. Deposits</div>
                     <div class="form-grid">
-                        <!-- Month 1 -->
                         <div class="form-row two-col-inline">
-                            <label>Deposit Month 1:</label>
+                            <label>Previous Month:</label>
                             <select id="depMonth1Name" onchange="handleInput()">
                                 <option value="January">January</option>
                                 <option value="February">February</option>
@@ -555,28 +556,27 @@
                                 <option value="May">May</option>
                                 <option value="June">June</option>
                                 <option value="July">July</option>
-                                <option value="August" selected>August</option>
+                                <option value="August">August</option>
                                 <option value="September">September</option>
-                                <option value="October">October</option>
+                                <option value="October" selected>October</option>
                                 <option value="November">November</option>
                                 <option value="December">December</option>
                             </select>
                             <input type="text" id="depYear1" value="2026" placeholder="Year" oninput="handleInput()">
                         </div>
                         <div class="form-row">
-                            <label for="depM1Current">Month 1 Amount ($):</label>
-                            <input type="text" id="depM1Current" value="34,250.00" oninput="handleInput()">
+                            <label for="depM1Current">Previous Month Amount ($):</label>
+                            <input type="text" id="depM1Current" value="0.00" oninput="handleInput()">
                         </div>
                         <div class="form-row">
-                            <label for="depM1Prior">Month 1 Prior Year ($):</label>
-                            <input type="text" id="depM1Prior" value="31,800.00" oninput="handleInput()">
+                            <label for="depM1Prior">Previous Month 1 Year Prior ($):</label>
+                            <input type="text" id="depM1Prior" value="0.00" oninput="handleInput()">
                         </div>
 
                         <hr style="border:none; border-top:1px dashed #eee; margin:4px 0;">
 
-                        <!-- Month 2 -->
                         <div class="form-row two-col-inline">
-                            <label>Deposit Month 2:</label>
+                            <label>Current Month:</label>
                             <select id="depMonth2Name" onchange="handleInput()">
                                 <option value="January">January</option>
                                 <option value="February">February</option>
@@ -586,20 +586,20 @@
                                 <option value="June">June</option>
                                 <option value="July">July</option>
                                 <option value="August">August</option>
-                                <option value="September" selected>September</option>
+                                <option value="September">September</option>
                                 <option value="October">October</option>
-                                <option value="November">November</option>
+                                <option value="November" selected>November</option>
                                 <option value="December">December</option>
                             </select>
                             <input type="text" id="depYear2" value="2026" placeholder="Year" oninput="handleInput()">
                         </div>
                         <div class="form-row">
-                            <label for="depM2Current">Month 2 Amount ($):</label>
-                            <input type="text" id="depM2Current" value="12,110.00" oninput="handleInput()">
+                            <label for="depM2Current">Current Month Amount ($):</label>
+                            <input type="text" id="depM2Current" value="0.00" oninput="handleInput()">
                         </div>
                         <div class="form-row">
-                            <label for="depM2Prior">Month 2 Prior Year ($):</label>
-                            <input type="text" id="depM2Prior" value="10,950.00" oninput="handleInput()">
+                            <label for="depM2Prior">Current Month 1 Year Prior ($):</label>
+                            <input type="text" id="depM2Prior" value="0.00" oninput="handleInput()">
                         </div>
                     </div>
                 </div>
@@ -611,9 +611,9 @@
                         <div class="form-row">
                             <label for="unrentableUnits">Unrentable Units #:</label>
                             <div class="input-group">
-                                <input type="number" id="unrentableUnits" value="2" oninput="handleInput()">
+                                <input type="number" id="unrentableUnits" value="0" oninput="handleInput()">
                                 <select id="picker-unrentableUnits" class="num-picker" onchange="syncPicker('unrentableUnits', this)">
-                                    <option value="" class="default-opt">2</option>
+                                    <option value="" class="default-opt">0</option>
                                     <script>for(let i=0;i<=50;i++) document.write(`<option value="${i}">${i}</option>`);</script>
                                 </select>
                             </div>
@@ -621,136 +621,71 @@
                     </div>
                 </div>
 
-                <!-- 6. WEEKLY NOTES (DYNAMIC DAYS & TASKS) -->
+                <!-- 6. WEEKLY NOTES -->
                 <div class="form-section">
                     <div class="section-title">
                         <span>6. Weekly Notes (Daily Tasks)</span>
                         <button class="btn btn-outline" style="padding:2px 6px; font-size:0.75rem;" onclick="addDayBlock()">+ Add Day</button>
                     </div>
-                    <div style="padding:10px;" id="dailyNotesContainer">
-                        <!-- Dynamic Day Blocks Render Here -->
-                    </div>
+                    <div style="padding:10px;" id="dailyNotesContainer"></div>
                 </div>
 
-                <!-- 7. UNRESOLVED / ONGOING ISSUES -->
+                <!-- 7. UNRESOLVED ISSUES -->
                 <div class="form-section">
                     <div class="section-title">
                         <span>7. Unresolved / Ongoing Issues</span>
                         <button class="btn btn-outline" style="padding:2px 6px; font-size:0.75rem;" onclick="addIssueCard()">+ Add Issue</button>
                     </div>
-                    <div style="padding:10px;" id="issuesContainer">
-                        <!-- Dynamic Issue Cards Render Here -->
-                    </div>
+                    <div style="padding:10px;" id="issuesContainer"></div>
                 </div>
 
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: REAL-TIME COPYABLE EMAIL PREVIEW -->
         <div class="panel">
             <div class="panel-header">
                 <span>Email Preview Output</span>
                 <div style="display:flex; gap:8px;">
                     <button class="btn btn-primary" onclick="copyFormattedEmail()" style="padding: 4px 10px; font-size:0.8rem;">📋 Copy to Clipboard</button>
-                    <button class="btn btn-purple" onclick="downloadEML()" style="padding: 4px 10px; font-size:0.8rem;">📥 Download .EML - Outlook</button>
+                    <button class="btn btn-purple" onclick="downloadEML()" style="padding: 4px 10px; font-size:0.8rem;">📥 Download .EML</button>
                 </div>
             </div>
             <div class="preview-panel-body">
-                <div id="emailPreview" class="preview-container">
-                    <!-- Dynamic HTML output generated via Javascript -->
-                </div>
+                <div id="emailPreview" class="preview-container"></div>
             </div>
         </div>
     </main>
 
-    <div id="toast" class="toast">Copied to clipboard! Ready to paste into Outlook/Email.</div>
+    <div id="toast" class="toast">Copied to clipboard! Ready to paste into email.</div>
 
     <script>
-        const STORAGE_KEY = 'aa_leland_weekly_update_draft';
+        // DYNAMIC LOCAL STORAGE KEY HELPER
+        function getStorageKey() {
+            const reportEl = document.getElementById('reportTitle');
+            const title = (reportEl && reportEl.value.trim()) ? reportEl.value.trim() : 'default';
+            const sanitized = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            return `weekly_update_draft_${sanitized}`;
+        }
 
-        // DEFAULT TEMPLATE DATA
+        // GENERALIZED DEFAULT TEMPLATES
         const defaultDailyNotes = [
             {
-                dayHeader: "MON 8-31-26",
-                dateVal: "2026-08-31",
+                dayHeader: "MON",
+                dateVal: "",
                 tasks: [
-                    "Manager's Name (and maintenance if applicable) working. Assistant Manager off.",
-                    "Contacted past dues and took payments.",
-                    "Dusted two rows of unit doors.",
-                    "Walked the lot and picked up trash.",
-                    "ABC Landscaping onsite."
-                ]
-            },
-            {
-                dayHeader: "TUE 9-1-26",
-                dateVal: "2026-09-01",
-                tasks: [
-                    "Manager's Name and Assistant Manager's Name working.",
-                    "Cut locks and took pictures of auction units.",
-                    "Ran UCC searches.",
-                    "Sent out Lien Notices to auction tenants.",
-                    "Cleaned the office windows."
-                ]
-            },
-            {
-                dayHeader: "WED 9-2-26",
-                dateVal: "2026-09-02",
-                tasks: [
-                    "Manager's Name and Assistant Manager's Name working.",
-                    "Kristen, Melissa T, and MG onsite for facility check.",
-                    "Rented A24 (10x10), 2048 (PSU), P45 (OSP), M45 (10x20).",
-                    "Ran the bank errand.",
-                    "Swept all of B and C buildings."
-                ]
-            },
-            {
-                dayHeader: "THU 9-3-26",
-                dateVal: "2026-09-03",
-                tasks: [
-                    "Manager's Name and Assistant Manager's Name working.",
-                    "Vacuumed A building.",
-                    "Cleaned units for the RTR list.",
-                    "Made Facebook posts.",
-                    "Took out trash from the office and all cc buildings."
-                ]
-            },
-            {
-                dayHeader: "FRI 9-4-26",
-                dateVal: "2026-09-04",
-                tasks: [
-                    "Assistant Manager's Name working. Facility Manager on vacation.",
-                    "Did the Walk Thru and checked all thermostats.",
-                    "Cleaned the front and back bathrooms.",
-                    "Placed Chateau order for boxes and supplies – marked up invoice sent to MT.",
-                    "Ran Walmart errand for office/facility supplies – receipt sent."
-                ]
-            },
-            {
-                dayHeader: "SAT 9-5-26",
-                dateVal: "2026-09-05",
-                tasks: [
-                    "Manager's Name and Assistant Manager's Name working.",
-                    "Walked/rode the lot and picked up trash.",
-                    "Checked the fence perimeters.",
-                    "Rented E124 (5x10).",
-                    "Contacted past dues and took payments."
+                    "Staff member working.",
+                    "Contacted past due accounts.",
+                    "Completed site walk."
                 ]
             }
         ];
 
         const defaultIssues = [
             {
-                title: "Camera in A building is not working",
+                title: "General Maintenance Item",
                 reported: "Y",
-                reportedTo: "Security Tech Co.",
-                stepsTaken: "Technician dispatched for Thursday morning service.",
-                resolved: "N"
-            },
-            {
-                title: "Gate keypad screen flickering on entrance side",
-                reported: "Y",
-                reportedTo: "Gate Support Line",
-                stepsTaken: "Reset breaker; ordered replacement keypad board.",
+                reportedTo: "Maintenance Dept",
+                stepsTaken: "Under review",
                 resolved: "N"
             }
         ];
@@ -758,7 +693,7 @@
         let dailyNotes = JSON.parse(JSON.stringify(defaultDailyNotes));
         let issues = JSON.parse(JSON.stringify(defaultIssues));
 
-        // INITIALIZATION WITH LOCALSTORAGE RESTORATION
+        // INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
             loadFromLocalStorage();
             renderDailyNotesEditor();
@@ -803,7 +738,17 @@
             saveToLocalStorage();
         }
 
-        // LOCALSTORAGE PERSISTENCE FUNCTIONS
+        function resetForm() {
+            if (confirm("Are you sure you want to clear all form fields and reset to generic defaults?")) {
+                try {
+                    localStorage.removeItem(getStorageKey());
+                } catch (e) {
+                    console.error("Failed to clear localStorage:", e);
+                }
+                location.reload();
+            }
+        }
+
         function saveToLocalStorage() {
             const inputs = {};
             document.querySelectorAll('input[id], select[id]').forEach(el => {
@@ -820,7 +765,7 @@
             };
 
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                localStorage.setItem(getStorageKey(), JSON.stringify(state));
                 showSaveStatus();
             } catch (e) {
                 console.error("Failed to save to localStorage:", e);
@@ -829,7 +774,7 @@
 
         function loadFromLocalStorage() {
             try {
-                const saved = localStorage.getItem(STORAGE_KEY);
+                const saved = localStorage.getItem(getStorageKey());
                 if (!saved) return;
 
                 const state = JSON.parse(saved);
@@ -866,7 +811,6 @@
             }
         }
 
-        // DAILY NOTES EDITING FUNCTIONS
         function renderDailyNotesEditor() {
             const container = document.getElementById('dailyNotesContainer');
             if (!container) return;
@@ -939,7 +883,7 @@
             dailyNotes.push({
                 dayHeader: formatDateHeader(todayStr),
                 dateVal: todayStr,
-                tasks: ["Task 1 description..."]
+                tasks: ["Task description..."]
             });
             renderDailyNotesEditor();
             handleInput();
@@ -951,7 +895,6 @@
             handleInput();
         }
 
-        // UNRESOLVED ISSUES EDITING FUNCTIONS
         function renderIssuesEditor() {
             const container = document.getElementById('issuesContainer');
             if (!container) return;
@@ -1018,7 +961,6 @@
             handleInput();
         }
 
-        // HELPER TO FORMAT PERCENTAGES
         function formatPercent(id) {
             const el = document.getElementById(id);
             if (!el || !el.value.trim()) return '';
@@ -1029,18 +971,22 @@
             return val + '%';
         }
 
-        // RENDER PREVIEW (EMAIL OUTPUT WITH INLINE HTML STYLING FOR OUTLOOK PASTE)
         function renderPreview() {
             const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
         
-            const title = getVal('reportTitle') || 'AA Self-Storage Leland Weekly Update';
+            const title = getVal('reportTitle').trim() || 'Weekly Update';
+            
+            document.title = title;
+            const headerTitleEl = document.getElementById('mainHeaderTitle');
+            if (headerTitleEl) headerTitleEl.textContent = title;
+
             const m1Name = getVal('depMonth1Name');
-            const y1 = getVal('depYear1');
-            const priorY1 = (parseInt(y1) - 1) || (y1 + " (Prior)");
+            const y1 = getVal('depYear1').trim();
+            const priorY1 = (parseInt(y1, 10) - 1) ? (parseInt(y1, 10) - 1) : (y1 ? `${y1} (Prior)` : '');
         
             const m2Name = getVal('depMonth2Name');
-            const y2 = getVal('depYear2');
-            const priorY2 = (parseInt(y2) - 1) || (y2 + " (Prior)");
+            const y2 = getVal('depYear2').trim();
+            const priorY2 = (parseInt(y2, 10) - 1) ? (parseInt(y2, 10) - 1) : (y2 ? `${y2} (Prior)` : '');
         
             let dailyNotesHTML = dailyNotes.map(d => `
                 <div style="font-weight:bold; text-transform:uppercase; margin-top:10px; margin-bottom:4px; color:#000;">${escapeHtml(d.dayHeader)}</div>
@@ -1062,7 +1008,6 @@
                 </table>
             `).join('');
         
-            // Updated header generator: applies top padding directly to the cell so Outlook respects section spacing
             const makeHeader = (text, isFirst = false) => `
                 <table style="width:100%; border-collapse:collapse; margin-bottom:6px;">
                     <tr>
@@ -1094,6 +1039,7 @@
                     ${makeRow('Climate Controlled:', formatPercent('occClimate'))}
                     ${makeRow('Covered Boat/RV:', formatPercent('occBoat'))}
                     ${makeRow('Outside Parking:', formatPercent('occOutsideParking'))}
+                    ${makeRow('Portable:', formatPercent('occPortable'))}
                     ${makeRow('Total Occupancy:', formatPercent('occTotal'))}
                     ${makeRow('Last Year’s Occupancy:', formatPercent('occLastYear'))}
                 </table>
@@ -1113,10 +1059,10 @@
         
                 ${makeHeader('DEPOSITS:')}
                 <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
-                    ${makeRow(`${m1Name}${y1}:`, '$' + getVal('depM1Current'))}
-                    ${makeRow(`${m1Name}${priorY1}:`, '$' + getVal('depM1Prior'))}
-                    ${makeRow(`${m2Name}${y2}:`, '$' + getVal('depM2Current'))}
-                    ${makeRow(`${m2Name}${priorY2}:`, '$' + getVal('depM2Prior'))}
+                    ${makeRow(`${m1Name} ${y1}:`, '$' + getVal('depM1Current'))}
+                    ${makeRow(`${m1Name} ${priorY1}:`, '$' + getVal('depM1Prior'))}
+                    ${makeRow(`${m2Name} ${y2}:`, '$' + getVal('depM2Current'))}
+                    ${makeRow(`${m2Name} ${priorY2}:`, '$' + getVal('depM2Prior'))}
                 </table>
         
                 ${makeHeader('NUMBER OF UNRENTABLE UNITS:')}
@@ -1139,11 +1085,10 @@
             if (previewEl) previewEl.innerHTML = html;
         }
 
-        // DOWNLOAD AS .EML FILE
         function downloadEML() {
             const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
             const recipient = getVal('emailRecipient') || '';
-            const title = getVal('reportTitle') || 'AA Self-Storage Leland Weekly Update';
+            const title = getVal('reportTitle').trim() || 'Weekly Update';
             const previewEl = document.getElementById('emailPreview');
             const htmlContent = previewEl ? previewEl.innerHTML : '';
 
@@ -1172,10 +1117,9 @@ ${htmlContent}
             document.body.removeChild(link);
             URL.revokeObjectURL(link.href);
 
-            showToast("EML file downloaded! Double-click to open directly in Outlook.");
+            showToast("EML file downloaded! Open directly in Outlook or email client.");
         }
 
-        // COPIES WITH BOTH text/html AND text/plain MEMORY ALLOCATIONS
         async function copyFormattedEmail() {
             const previewEl = document.getElementById('emailPreview');
             if (!previewEl) return;
@@ -1192,7 +1136,7 @@ ${htmlContent}
                         'text/plain': textBlob
                     });
                     await navigator.clipboard.write([item]);
-                    showToast("Copied with full HTML formatting! Paste (Ctrl+V) directly into Outlook.");
+                    showToast("Copied with full formatting! Paste directly into email.");
                 } else {
                     fallbackCopy();
                 }
@@ -1215,7 +1159,7 @@ ${htmlContent}
                 window.getSelection().removeAllRanges();
                 showToast("Copied to clipboard!");
             } catch (err) {
-                alert("Failed to copy. Please select the preview box manually and press Ctrl+C.");
+                alert("Failed to copy. Please select preview text manually and copy.");
             }
         }
 
