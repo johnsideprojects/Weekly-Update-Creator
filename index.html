@@ -659,13 +659,8 @@
     <div id="toast" class="toast">Copied to clipboard! Ready to paste into email.</div>
 
     <script>
-        // DYNAMIC LOCAL STORAGE KEY HELPER
-        function getStorageKey() {
-            const reportEl = document.getElementById('reportTitle');
-            const title = (reportEl && reportEl.value.trim()) ? reportEl.value.trim() : 'default';
-            const sanitized = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-            return `weekly_update_draft_${sanitized}`;
-        }
+        // STATIC LOCAL STORAGE KEY TO GUARANTEE CONSISTENT SAVING/LOADING
+        const STORAGE_KEY = 'weekly_update_tool_draft_v1';
 
         // GENERALIZED DEFAULT TEMPLATES
         const defaultDailyNotes = [
@@ -741,7 +736,7 @@
         function resetForm() {
             if (confirm("Are you sure you want to clear all form fields and reset to generic defaults?")) {
                 try {
-                    localStorage.removeItem(getStorageKey());
+                    localStorage.removeItem(STORAGE_KEY);
                 } catch (e) {
                     console.error("Failed to clear localStorage:", e);
                 }
@@ -765,7 +760,7 @@
             };
 
             try {
-                localStorage.setItem(getStorageKey(), JSON.stringify(state));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
                 showSaveStatus();
             } catch (e) {
                 console.error("Failed to save to localStorage:", e);
@@ -774,7 +769,7 @@
 
         function loadFromLocalStorage() {
             try {
-                const saved = localStorage.getItem(getStorageKey());
+                const saved = localStorage.getItem(STORAGE_KEY);
                 if (!saved) return;
 
                 const state = JSON.parse(saved);
@@ -1059,10 +1054,10 @@
         
                 ${makeHeader('DEPOSITS:')}
                 <table style="width:100%; border-collapse:collapse; font-size:inherit; font-family:inherit;">
-                    ${makeRow(`${m1Name} ${y1}:`, '$' + getVal('depM1Current'))}
-                    ${makeRow(`${m1Name} ${priorY1}:`, '$' + getVal('depM1Prior'))}
-                    ${makeRow(`${m2Name} ${y2}:`, '$' + getVal('depM2Current'))}
-                    ${makeRow(`${m2Name} ${priorY2}:`, '$' + getVal('depM2Prior'))}
+                    ${makeRow(`${m1Name}${y1}:`, '$' + getVal('depM1Current'))}
+                    ${makeRow(`${m1Name}${priorY1}:`, '$' + getVal('depM1Prior'))}
+                    ${makeRow(`${m2Name}${y2}:`, '$' + getVal('depM2Current'))}
+                    ${makeRow(`${m2Name}${priorY2}:`, '$' + getVal('depM2Prior'))}
                 </table>
         
                 ${makeHeader('NUMBER OF UNRENTABLE UNITS:')}
